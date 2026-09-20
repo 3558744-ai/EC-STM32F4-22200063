@@ -1,0 +1,27 @@
+# PlatformIO build files
+.pio/
+
+# VS Code generated files
+.vscode/
+
+# Unit test files
+test/
+
+# Temporary Code Runner files
+tempCodeRunnerFile.*
+
+# Compiled files
+*.exe
+*.o
+*.elf
+*.bin
+
+# PlatformIO project configuration
+platformio.ini
+
+# Unused lab/tutorial files
+lab/LAB_GPIO_DIO_LED
+lab/TU_stm32_Installation_EXAMPLE_CODE.ino
+
+# PlatformIO local library folder
+lib/
