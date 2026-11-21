@@ -182,6 +182,7 @@ void FND_display(uint8_t num);
 // Select one of the four 7-segment displays.
 void FND_select(uint8_t digit);
 
+void led_toggle(PinName_t pinName);
 
 #ifdef __cplusplus
 }

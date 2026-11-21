@@ -14,11 +14,11 @@ volatile int EC_SYSCLK=16000000;
 
 void RCC_HSI_init() {
 // Enable High Speed Internal Clock (HSI = 16 MHz)
-  //RCC->CR |= ((uint32_t)RCC_CR_HSION);
+  // RCC->CR |= ((uint32_t)RCC_CR_HSION);
 	RCC->CR |= 0x00000001U;
 	
   // wait until HSI is ready
-  //while ( (RCC->CR & (uint32_t) RCC_CR_HSIRDY) == 0 ) {;}
+  // while ( (RCC->CR & (uint32_t) RCC_CR_HSIRDY) == 0 ) {;}
 	while ( (RCC->CR & 0x00000002U) == 0 ) {;}
 	
   // Select HSI as system clock source 

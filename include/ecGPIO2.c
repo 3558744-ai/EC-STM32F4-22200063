@@ -249,3 +249,111 @@ uint32_t GPIO_read(PinName_t pinName)
     // Move the selected IDR bit to bit 0 and remove all other bits.
     return (Port->IDR >> pin) & 0x1UL;
 }
+
+////////////////////////////////////////////////////////////////////
+
+/* Include the following in GPIO.c */
+
+////////////////////////////////////////////////////////////////////
+
+// FND - JKIT board
+
+static PinName_t _fndPins[8];
+static PinName_t _fndSel[4];
+
+// Each LED that has to light up gets a 1,
+// every other LED gets a 0
+// order: {a, b, c, d, e, f, g, dp}
+
+int numberFND[12][8] = {
+
+    {1,1,1,1,1,1,0,0},      // 0
+    {0,1,1,0,0,0,0,0},      // 1
+    {1,1,0,1,1,0,1,0},      // 2
+    {1,1,1,1,0,0,1,0},      // 3
+    {0,1,1,0,0,1,1,0},      // 4
+    {1,0,1,1,0,1,1,0},      // 5
+    {1,0,1,1,1,1,1,0},      // 6
+    {1,1,1,0,0,0,0,0},      // 7
+    {1,1,1,1,1,1,1,0},      // 8
+    {1,1,1,1,0,1,1,0},      // 9
+    {0,0,0,0,0,0,0,1},      // dot
+    {0,0,0,0,0,0,0,0}       // blank
+};
+
+
+// Initialize DOUT pins for 7 segment LEDs
+void FND_init(PinName_t *pinFND){
+
+    for (int i=0; i<8; i++){
+
+        // Save corresponding GPIO pin
+        _fndPins[i] = pinFND[i];
+
+        // Configure segment pin as output
+        GPIO_init(_fndPins[i], OUTPUT);
+
+        // Initially turn off each segment
+        GPIO_write(_fndPins[i], LOW);
+    }
+}
+
+
+// Initialize select pins (FND0~FND3) as DOUT
+void FND_select_init(PinName_t *selectFND){
+
+    for (int i=0; i<4; i++){
+
+        // Save corresponding FND selection pin
+        _fndSel[i] = selectFND[i];
+
+        // Configure selection pin as output
+        GPIO_init(_fndSel[i], OUTPUT);
+
+        // Initially turn off every FND
+        GPIO_write(_fndSel[i], LOW);
+    }
+}
+
+
+// Display a number
+void FND_display(uint8_t num){
+
+    // Prevent invalid array access
+    if (num > 11)
+        return;
+
+    // Write segment pattern to a~g and dp
+    for (int i=0; i<8; i++){
+
+        GPIO_write(_fndPins[i], numberFND[num][i]);
+    }
+}
+
+
+// Select display: FND0 to FND3
+void FND_select(uint8_t digit){
+
+    // FND0~FND3
+    for (int i=0; i<4; i++){
+
+        if (i == digit){
+
+            // Turn ON selected FND
+            GPIO_write(_fndSel[i], HIGH);
+        }
+        else {
+
+            // Turn OFF other FNDs
+            GPIO_write(_fndSel[i], LOW);
+        }
+    }
+}
+
+void led_toggle(PinName_t pinName) {
+    GPIO_TypeDef *Port;
+    unsigned int pin;
+    ecPinmap(pinName, &Port, &pin);
+
+    Port->ODR ^= (1UL << pin);
+}

@@ -3,7 +3,7 @@
 
 void dec2bin(unsigned int n);
 
-void main() {
+int main(void) {
     
 	uint8_t vals=0;
 	
